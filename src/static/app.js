@@ -35,16 +35,35 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
           <p><strong>Participants:</strong></p>
-          <div class="participants-list">
-            ${details.participants.length > 0 ? details.participants.map(p => `
-              <div class="participant-item">
-                <span>${p}</span>
-                <button class="delete-btn" data-activity="${name}" data-email="${p}" title="Unregister participant">×</button>
-              </div>
-            `).join('') : '<div class="participant-item">No participants yet</div>'}
-          </div>
+          <div class="participants-list"></div>
         `;
 
+        const participantsList = activityCard.querySelector(".participants-list");
+        if (details.participants.length > 0) {
+          details.participants.forEach((p) => {
+            const participantItem = document.createElement("div");
+            participantItem.className = "participant-item";
+
+            const nameSpan = document.createElement("span");
+            nameSpan.textContent = p;
+            participantItem.appendChild(nameSpan);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "delete-btn";
+            deleteButton.textContent = "×";
+            deleteButton.title = "Unregister participant";
+            deleteButton.dataset.activity = name;
+            deleteButton.dataset.email = p;
+            participantItem.appendChild(deleteButton);
+
+            participantsList.appendChild(participantItem);
+          });
+        } else {
+          const noParticipantsItem = document.createElement("div");
+          noParticipantsItem.className = "participant-item";
+          noParticipantsItem.textContent = "No participants yet";
+          participantsList.appendChild(noParticipantsItem);
+        }
         activitiesList.appendChild(activityCard);
 
         // Add option to select dropdown
